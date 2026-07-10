@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>about — manan.log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #EDE8DC;
+      --bg-dark: #1e1810;
+      --ink: #2a2420;
+      --muted: #7a7268;
+      --cream: #f5f0e8;
+      --yellow: #FFD700;
+      --red: #c0392b;
+      --blue-cat: #1a5da6;
+      --purple-cat: #6b21a8;
+      --red-cat: #c0392b;
+      --green-cat: #2d6a35;
+      --amber-cat: #b45309;
+      --footer-bg: #231c10;
+      --footer-text: #c8c0b0;
+      --footer-accent: #FFD700;
+    }
+
+    body {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--ink);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Special Elite', serif;
+      font-size: 20px;
+      color: var(--bg);
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      color: #b8b0a0;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .nav-links a:hover { color: var(--bg); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      border-bottom: 3px solid var(--yellow);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(28px, 5vw, 48px);
+      color: var(--yellow);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: #c8c0b0;
+      max-width: 480px;
+      margin: 0 auto 1.25rem;
+      line-height: 1.7;
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-badge {
+      font-size: 11px;
+      border: 1.5px solid #5a5040;
+      color: #9a9080;
+      padding: 4px 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── FILTER ── */
+    .filter-section { margin-bottom: 1.75rem; }
+
+    .filter-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .filter-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .filter-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 13px;
+      padding: 6px 16px;
+      background: var(--bg);
+      border: 2px solid var(--ink);
+      cursor: pointer;
+      color: var(--ink);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    /* ── CARDS GRID ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 540px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── POST CARD ── */
+    .post-card {
+      background: #fff;
+      border: 2.5px solid var(--ink);
+      position: relative;
+      transition: transform 0.15s;
+    }
+
+    .post-card:nth-child(odd)  { transform: rotate(-0.5deg); }
+    .post-card:nth-child(3n)   { transform: rotate(0.4deg); }
+    .post-card:nth-child(4n)   { transform: rotate(-0.3deg); }
+    .post-card:hover           { transform: rotate(0deg) scale(1.02); z-index: 5; }
+
+    .sticky-note {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38px;
+      height: 20px;
+      z-index: 3;
+    }
+
+    .sticky-yellow { background: #FFE566; border: 1px solid #d4b800; }
+    .sticky-green  { background: #B8F0B0; border: 1px solid #5a9e55; }
+    .sticky-pink   { background: #FFB8CF; border: 1px solid #d4607a; }
+    .sticky-blue   { background: #b8d8f0; border: 1px solid #4a8ab5; }
+
+    .stamp {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 46px;
+      height: 46px;
+      border: 2.5px solid;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      z-index: 4;
+      background: rgba(237,232,220,0.88);
+    }
+
+    .stamp-red  { border-color: #c0392b; color: #c0392b; }
+    .stamp-blue { border-color: #1a5da6; color: #1a5da6; }
+
+    .card-img {
+      height: 150px;
+      background: #ccc8c0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #999;
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cat-banner {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .cat-tech    { background: #1a5da6; }
+    .cat-build   { background: #6b21a8; }
+    .cat-oldweb  { background: #c0392b; }
+    .cat-craft   { background: #2d6a35; }
+    .cat-life    { background: #b45309; }
+
+    .card-body { padding: 13px 15px 15px; }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: 9px;
+      text-decoration: underline;
+      text-decoration-color: var(--yellow);
+      text-decoration-thickness: 3px;
+      text-underline-offset: 2px;
+    }
+
+    .card-excerpt {
+      font-size: 12px;
+      color: #3d3830;
+      line-height: 1.65;
+      margin-bottom: 11px;
+    }
+
+    .card-hashtags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 11px;
+    }
+
+    .hashtag {
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid #c4bfb6;
+      padding: 2px 7px;
+      background: #f5f0e8;
+    }
+
+    .read-link {
+      font-family: 'Courier Prime', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red);
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .read-link:hover { color: #922b21; }
+
+    /* ── HIDDEN ── */
+    .post-card.hidden { display: none; }
+
+    /* ── FEATURED SECTION ── */
+    .featured-section { margin-bottom: 2.5rem; }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .section-label .star { color: var(--yellow); font-size: 16px; }
+
+    .section-label::after {
+      content: '';
+      display: inline-block;
+      width: 60px;
+      height: 0;
+      border-bottom: 1.5px solid;
+      border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='6'%3E%3Cpath d='M0 3 Q15 0 30 3 Q45 6 60 3' stroke='%237a7268' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") 1;
+      border-bottom: none;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='8'%3E%3Cpath d='M0 4 Q15 1 30 4 Q45 7 60 4' stroke='%237a7268' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center/contain;
+      width: 60px;
+      height: 8px;
+      flex-shrink: 0;
+    }
+
+    .featured-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 2.5px solid var(--ink);
+      background: #fff;
+      min-height: 340px;
+    }
+
+    @media (max-width: 700px) {
+      .featured-card { grid-template-columns: 1fr; }
+    }
+
+    .featured-img {
+      background: #bfb9ae;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      color: #999;
+      min-height: 260px;
+    }
+
+    .featured-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .featured-img-cat {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .featured-content {
+      padding: 1.5rem 1.75rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #faf6ee;
+      border-left: 2.5px solid var(--ink);
+    }
+
+    .featured-banner {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--red);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+    }
+
+    .featured-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .featured-title {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(20px, 3vw, 26px);
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+      text-decoration: underline;
+      text-decoration-color: var(--yellow);
+      text-decoration-thickness: 4px;
+      text-underline-offset: 3px;
+    }
+
+    .featured-divider {
+      border: none;
+      border-top: 1.5px solid;
+      border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='8'%3E%3Cpath d='M0 4 Q75 1 150 4 Q225 7 300 4' stroke='%23c4bfb6' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") 1;
+      margin: 0.75rem 0;
+      height: 8px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='8'%3E%3Cpath d='M0 4 Q75 1 150 4 Q225 7 300 4' stroke='%23c4bfb6' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center/100% 100%;
+      border: none;
+    }
+
+    .featured-excerpt {
+      font-size: 13px;
+      color: #3d3830;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .featured-hashtags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.25rem;
+    }
+
+    .featured-cta {
+      display: inline-block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--ink);
+      color: #f5f0e8;
+      padding: 12px 22px;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      letter-spacing: 0.02em;
+      align-self: flex-start;
+    }
+
+    .featured-cta:hover { background: #3d3020; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 3rem 2rem 1.5rem;
+      margin-top: auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #3a3020;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 700px) {
+      .footer-top { grid-template-columns: 1fr; }
+      nav { padding: 0.75rem 1rem; }
+      main { padding: 1.25rem 1rem; }
+    }
+
+    .footer-blog-name {
+      font-family: 'Special Elite', serif;
+      font-size: 22px;
+      color: var(--footer-accent);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+      font-style: italic;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #a09880;
+      margin-bottom: 1rem;
+      max-width: 280px;
+    }
+
+    .footer-motto {
+      font-size: 12px;
+      color: #6a6050;
+    }
+
+    .footer-motto .flag { margin-left: 6px; }
+
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--footer-text);
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid #3a3020;
+      margin-bottom: 1rem;
+    }
+
+    .footer-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-list li::before {
+      content: '› ';
+      color: #5a5040;
+    }
+
+    .footer-list a {
+      font-size: 13px;
+      color: #a09880;
+      text-decoration: none;
+    }
+
+    .footer-list a:hover { color: var(--footer-accent); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: #5a5040;
+    }
+
+    .footer-made {
+      font-size: 12px;
+      color: #5a5040;
+    }
+
+    .footer-made .heart { color: #c0392b; }
+
+    /* ── ABOUT GRID ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2.5rem;
+      margin-bottom: 2.75rem;
+      align-items: start;
+    }
+
+    @media (max-width: 760px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── ID CARD ── */
+    .id-card {
+      background: #fff;
+      border: 2.5px solid var(--ink);
+      position: relative;
+      transform: rotate(-1.2deg);
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .id-card-header {
+      background: var(--ink);
+      color: var(--cream);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .id-card-header .id-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--yellow);
+      flex-shrink: 0;
+    }
+
+    .id-card-body {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .id-photo {
+      width: 92px;
+      height: 116px;
+      flex-shrink: 0;
+      border: 2px dashed #b8b0a0;
+      background: #e8e2d4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #9a9080;
+      font-size: 34px;
+      text-align: center;
+    }
+
+    .id-photo .id-photo-label {
+      font-size: 8.5px;
+      letter-spacing: 0.1em;
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+
+    .id-fields {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .id-field .id-label {
+      color: var(--muted);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      display: block;
+      font-size: 9px;
+      margin-bottom: 1px;
+    }
+
+    .id-field .id-value {
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 12.5px;
+      line-height: 1.3;
+    }
+
+    .id-barcode {
+      height: 24px;
+      margin: 0 16px 10px;
+      background: repeating-linear-gradient(90deg, var(--ink) 0px, var(--ink) 2px, transparent 2px, transparent 5px);
+    }
+
+    .id-number {
+      font-size: 9.5px;
+      color: var(--muted);
+      text-align: center;
+      margin: 0 16px 14px;
+      letter-spacing: 0.05em;
+    }
+
+    .id-stamp {
+      position: absolute;
+      bottom: 56px;
+      right: -16px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2.5px solid var(--red);
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      transform: rotate(-16deg);
+      background: rgba(245, 240, 232, 0.92);
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    /* ── BIO ── */
+    .bio-block { padding-top: 6px; }
+
+    .bio-greeting {
+      font-family: 'Special Elite', serif;
+      font-size: 22px;
+      color: var(--ink);
+      margin-bottom: 0.9rem;
+    }
+
+    .bio-text {
+      font-size: 14px;
+      line-height: 1.85;
+      color: #3d3830;
+      margin-bottom: 1rem;
+      max-width: 580px;
+    }
+
+    .bio-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.75rem 0 1.5rem;
+    }
+
+    /* ── LINK BUTTONS ── */
+    .link-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .link-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 20px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .link-btn.primary {
+      background: var(--ink);
+      color: var(--cream);
+      border: 2px solid var(--ink);
+    }
+
+    .link-btn.primary:hover { background: #3d3020; }
+
+    .link-btn.outline {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+    }
+
+    .link-btn.outline:hover { background: var(--ink); color: var(--bg); }
+
+    a.read-link { display: inline-block; }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo" style="text-decoration:none;">manan's logs</a>
+    <ul class="nav-links">
+      <li><a href="#">archive</a></li>
+      <li><a href="about.html" style="color:var(--bg);">about</a></li>
+      <li><a href="#">now</a></li>
+      <li><a href="#">rss</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1 class="hero-title">the human behind the screen</h1>
+    <p class="hero-sub">Student, builder, occasional writer. I make things that didn't strictly need to exist, then write about why I made them.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">NIT Hamirpur</span>
+      <span class="hero-badge">data &amp; ML</span>
+      <span class="hero-badge">building things</span>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- ID CARD + BIO -->
+    <div class="about-grid">
+      <div class="id-card">
+        <div class="id-card-header">
+          <span>contributor pass</span>
+          <span class="id-dot"></span>
+        </div>
+        <div class="id-card-body">
+          <div class="id-photo">
+            <!-- Swap this box for a real photo: replace the emoji+div below with
+                 <img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover;"> -->
+            🪪
+            <span class="id-photo-label">photo</span>
+          </div>
+          <div class="id-fields">
+            <div class="id-field">
+              <span class="id-label">Name</span>
+              <span class="id-value">Manan Gupta</span>
+            </div>
+            <div class="id-field">
+              <span class="id-label">Institute</span>
+              <span class="id-value">NIT Hamirpur</span>
+            </div>
+            <div class="id-field">
+              <span class="id-label">Field</span>
+              <span class="id-value">Data Science / ML</span>
+            </div>
+            <div class="id-field">
+              <span class="id-label">Status</span>
+              <span class="id-value">Active — building</span>
+            </div>
+          </div>
+        </div>
+        <div class="id-barcode"></div>
+        <div class="id-number">NO. 0X7 — ISSUED 2026 — VALID INDEFINITELY</div>
+        <div class="id-stamp">VERIFIED<br/>HUMAN</div>
+      </div>
+
+      <div class="bio-block">
+        <div class="bio-greeting">hey, I'm Manan.</div>
+        <p class="bio-text">I'm a Computer Science student at NIT Hamirpur and currently a Summer Research Fellow at IIT Bombay.
+
+My interests lie at the intersection of machine learning, data systems, and human behavior. Recently I've been working on predicting socio-demographic characteristics from anonymized mobile phone data for transport planning applications.</p>
+        <p class="bio-text">This website is my notebook. I use it to publish project write-ups, research notes, paper annotations, and occasional essays about things I'm learning.</p>
+        <div class="bio-skills">
+          <span class="hashtag">Python</span>
+          <span class="hashtag">CatBoost</span>
+          <span class="hashtag">Graph ML</span>
+          <span class="hashtag">Flask</span>
+          <span class="hashtag">NumPy</span>
+          <span class="hashtag">Data Pipelines</span>
+        </div>
+        <div class="link-row">
+          <!-- Replace these hrefs with your real links -->
+          <a href="#" class="link-btn outline">⌥ GitHub →</a>
+          <a href="#" class="link-btn primary">📄 Resume →</a>
+          <a href="mailto:you@example.com" class="link-btn outline">✉ Email →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="featured-section">
+      <div class="section-label"><span class="star">★</span> things I've built</div>
+    </div>
+
+    <div class="cards-grid">
+
+      <div class="post-card">
+        <div class="sticky-note sticky-blue"></div>
+        <div class="stamp stamp-blue">WIP</div>
+        <div class="card-img">
+          🗺
+          <div class="cat-banner cat-tech">Data Science</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>IITB Research</span><span>Ongoing</span></div>
+          <div class="card-title">Predicting Demographics from Phone Towers</div>
+          <div class="card-excerpt">A research pipeline that turns anonymized mobile CDR data into socio-economic predictions for Mumbai — co-location graphs, mobility k-NN, and CatBoost, feeding a synthetic population generator for travel demand modeling.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#CDR</span>
+            <span class="hashtag">#GraphML</span>
+            <span class="hashtag">#CatBoost</span>
+            <span class="hashtag">#UrbanData</span>
+          </div>
+          <a href="#" class="read-link">view project →</a>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="sticky-note sticky-yellow"></div>
+        <div class="stamp stamp-red">SHIPPED</div>
+        <div class="card-img">
+          ⚙
+          <div class="cat-banner cat-build">Systems &amp; Infra</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Personal Project</span><span>2026</span></div>
+          <div class="card-title">NeuroCache: A Cache Simulator With Opinions</div>
+          <div class="card-excerpt">Set-associative LRU eviction modeled in NumPy, served through Flask, visualized with Chart.js. Built to actually understand cache misses instead of memorizing the formula.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#Python</span>
+            <span class="hashtag">#Flask</span>
+            <span class="hashtag">#NumPy</span>
+            <span class="hashtag">#Systems</span>
+          </div>
+          <a href="#" class="read-link">view project →</a>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="sticky-note sticky-green"></div>
+        <div class="card-img">
+          ✏
+          <div class="cat-banner cat-craft">Design &amp; Frontend</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Personal Project</span><span>Live</span></div>
+          <div class="card-title">This Blog, Actually</div>
+          <div class="card-excerpt">A single-file HTML zine — Courier Prime, paper textures, hand-placed stamps and sticky notes — built because personal sites shouldn't all look like the same template.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#HTML</span>
+            <span class="hashtag">#CSS</span>
+            <span class="hashtag">#DesignSystems</span>
+          </div>
+          <a href="#" class="read-link">view project →</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-about">
+        <div class="footer-blog-name">ctrl+z on life</div>
+        <p class="footer-desc">A personal blog about tech, anime, internet culture, and other things I can't stop thinking about.</p>
+        <p class="footer-motto">no tracking. no ads. no algorithm. <span class="flag">🏴</span></p>
+      </div>
+
+      <div class="footer-archive">
+        <div class="footer-col-title">Archive</div>
+        <ul class="footer-list">
+          <li><a href="#">2025 (18 posts)</a></li>
+          <li><a href="#">2024 (31 posts)</a></li>
+          <li><a href="#">2023 (24 posts)</a></li>
+          <li><a href="#">2022 (17 posts)</a></li>
+          <li><a href="#">2021 (9 posts)</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-misc">
+        <div class="footer-col-title">Misc</div>
+        <ul class="footer-list">
+          <li><a href="#">RSS Feed</a></li>
+          <li><a href="#">Subscribe (email)</a></li>
+          <li><a href="#">Uses (my setup)</a></li>
+          <li><a href="#">Colophon</a></li>
+          <li><a href="#">Now page</a></li>
+          <li><a href="#">Source code</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Manan Gupta. All opinions are my own and wrong.</span>
+      <span class="footer-made">made with <span class="heart">♥</span> and too much caffeine</span>
+    </div>
+  </footer>
+
+</body>
+</html>

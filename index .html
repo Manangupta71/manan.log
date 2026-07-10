@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>manan.log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #EDE8DC;
+      --bg-dark: #1e1810;
+      --ink: #2a2420;
+      --muted: #7a7268;
+      --cream: #f5f0e8;
+      --yellow: #FFD700;
+      --red: #c0392b;
+      --blue-cat: #1a5da6;
+      --purple-cat: #6b21a8;
+      --red-cat: #c0392b;
+      --green-cat: #2d6a35;
+      --amber-cat: #b45309;
+      --footer-bg: #231c10;
+      --footer-text: #c8c0b0;
+      --footer-accent: #FFD700;
+    }
+
+    body {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--ink);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Special Elite', serif;
+      font-size: 20px;
+      color: var(--bg);
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      color: #b8b0a0;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .nav-links a:hover { color: var(--bg); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      border-bottom: 3px solid var(--yellow);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(28px, 5vw, 48px);
+      color: var(--yellow);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: #c8c0b0;
+      max-width: 480px;
+      margin: 0 auto 1.25rem;
+      line-height: 1.7;
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-badge {
+      font-size: 11px;
+      border: 1.5px solid #5a5040;
+      color: #9a9080;
+      padding: 4px 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── FILTER ── */
+    .filter-section { margin-bottom: 1.75rem; }
+
+    .filter-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .filter-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .filter-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 13px;
+      padding: 6px 16px;
+      background: var(--bg);
+      border: 2px solid var(--ink);
+      cursor: pointer;
+      color: var(--ink);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    /* ── CARDS GRID ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 540px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── POST CARD ── */
+    .post-card {
+      background: #fff;
+      border: 2.5px solid var(--ink);
+      position: relative;
+      transition: transform 0.15s;
+    }
+
+    .post-card:nth-child(odd)  { transform: rotate(-0.5deg); }
+    .post-card:nth-child(3n)   { transform: rotate(0.4deg); }
+    .post-card:nth-child(4n)   { transform: rotate(-0.3deg); }
+    .post-card:hover           { transform: rotate(0deg) scale(1.02); z-index: 5; }
+
+    .sticky-note {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38px;
+      height: 20px;
+      z-index: 3;
+    }
+
+    .sticky-yellow { background: #FFE566; border: 1px solid #d4b800; }
+    .sticky-green  { background: #B8F0B0; border: 1px solid #5a9e55; }
+    .sticky-pink   { background: #FFB8CF; border: 1px solid #d4607a; }
+    .sticky-blue   { background: #b8d8f0; border: 1px solid #4a8ab5; }
+
+    .stamp {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 46px;
+      height: 46px;
+      border: 2.5px solid;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      z-index: 4;
+      background: rgba(237,232,220,0.88);
+    }
+
+    .stamp-red  { border-color: #c0392b; color: #c0392b; }
+    .stamp-blue { border-color: #1a5da6; color: #1a5da6; }
+
+    .card-img {
+      height: 150px;
+      background: #ccc8c0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #999;
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cat-banner {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .cat-tech    { background: #1a5da6; }
+    .cat-build   { background: #6b21a8; }
+    .cat-oldweb  { background: #c0392b; }
+    .cat-craft   { background: #2d6a35; }
+    .cat-life    { background: #b45309; }
+
+    .card-body { padding: 13px 15px 15px; }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: 9px;
+      text-decoration: underline;
+      text-decoration-color: var(--yellow);
+      text-decoration-thickness: 3px;
+      text-underline-offset: 2px;
+    }
+
+    .card-excerpt {
+      font-size: 12px;
+      color: #3d3830;
+      line-height: 1.65;
+      margin-bottom: 11px;
+    }
+
+    .card-hashtags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 11px;
+    }
+
+    .hashtag {
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid #c4bfb6;
+      padding: 2px 7px;
+      background: #f5f0e8;
+    }
+
+    .read-link {
+      font-family: 'Courier Prime', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red);
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .read-link:hover { color: #922b21; }
+
+    /* ── HIDDEN ── */
+    .post-card.hidden { display: none; }
+
+    /* ── FEATURED SECTION ── */
+    .featured-section { margin-bottom: 2.5rem; }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .section-label .star { color: var(--yellow); font-size: 16px; }
+
+    .section-label::after {
+      content: '';
+      display: inline-block;
+      width: 60px;
+      height: 0;
+      border-bottom: 1.5px solid;
+      border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='6'%3E%3Cpath d='M0 3 Q15 0 30 3 Q45 6 60 3' stroke='%237a7268' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") 1;
+      border-bottom: none;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='8'%3E%3Cpath d='M0 4 Q15 1 30 4 Q45 7 60 4' stroke='%237a7268' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center/contain;
+      width: 60px;
+      height: 8px;
+      flex-shrink: 0;
+    }
+
+    .featured-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 2.5px solid var(--ink);
+      background: #fff;
+      min-height: 340px;
+    }
+
+    @media (max-width: 700px) {
+      .featured-card { grid-template-columns: 1fr; }
+    }
+
+    .featured-img {
+      background: #bfb9ae;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      color: #999;
+      min-height: 260px;
+    }
+
+    .featured-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .featured-img-cat {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .featured-content {
+      padding: 1.5rem 1.75rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #faf6ee;
+      border-left: 2.5px solid var(--ink);
+    }
+
+    .featured-banner {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--red);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+    }
+
+    .featured-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .featured-title {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(20px, 3vw, 26px);
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+      text-decoration: underline;
+      text-decoration-color: var(--yellow);
+      text-decoration-thickness: 4px;
+      text-underline-offset: 3px;
+    }
+
+    .featured-divider {
+      border: none;
+      border-top: 1.5px solid;
+      border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='8'%3E%3Cpath d='M0 4 Q75 1 150 4 Q225 7 300 4' stroke='%23c4bfb6' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") 1;
+      margin: 0.75rem 0;
+      height: 8px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='8'%3E%3Cpath d='M0 4 Q75 1 150 4 Q225 7 300 4' stroke='%23c4bfb6' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center/100% 100%;
+      border: none;
+    }
+
+    .featured-excerpt {
+      font-size: 13px;
+      color: #3d3830;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .featured-hashtags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.25rem;
+    }
+
+    .featured-cta {
+      display: inline-block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--ink);
+      color: #f5f0e8;
+      padding: 12px 22px;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      letter-spacing: 0.02em;
+      align-self: flex-start;
+    }
+
+    .featured-cta:hover { background: #3d3020; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 3rem 2rem 1.5rem;
+      margin-top: auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #3a3020;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 700px) {
+      .footer-top { grid-template-columns: 1fr; }
+      nav { padding: 0.75rem 1rem; }
+      main { padding: 1.25rem 1rem; }
+    }
+
+    .footer-blog-name {
+      font-family: 'Special Elite', serif;
+      font-size: 22px;
+      color: var(--footer-accent);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+      font-style: italic;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #a09880;
+      margin-bottom: 1rem;
+      max-width: 280px;
+    }
+
+    .footer-motto {
+      font-size: 12px;
+      color: #6a6050;
+    }
+
+    .footer-motto .flag { margin-left: 6px; }
+
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--footer-text);
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid #3a3020;
+      margin-bottom: 1rem;
+    }
+
+    .footer-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-list li::before {
+      content: '› ';
+      color: #5a5040;
+    }
+
+    .footer-list a {
+      font-size: 13px;
+      color: #a09880;
+      text-decoration: none;
+    }
+
+    .footer-list a:hover { color: var(--footer-accent); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: #5a5040;
+    }
+
+    .footer-made {
+      font-size: 12px;
+      color: #5a5040;
+    }
+
+    .footer-made .heart { color: #c0392b; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo" style="text-decoration:none;">manan.log</a>
+    <ul class="nav-links">
+      <li><a href="#">archive</a></li>
+      <li><a href="about.html">about</a></li>
+      <li><a href="#">now</a></li>
+      <li><a href="#">rss</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1 class="hero-title">Manan Gupta</h1>
+    <p class="hero-sub">Notes on machine learning, research, engineering, and everything in between.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">no tracking</span>
+      <span class="hero-badge">no ads</span>
+      <span class="hero-badge">no algorithm</span>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+    <!-- FEATURED POST -->
+    <div class="featured-section">
+      <div class="section-label"><span class="star">★</span> latest &amp; greatest</div>
+      <div class="featured-card">
+        <div class="featured-img">
+          📚
+          <div class="featured-img-cat cat-oldweb">Manifesto</div>
+        </div>
+        <div class="featured-content">
+          <div class="featured-banner">★ Featured</div>
+          <div class="featured-meta">
+            <span>June 2, 2025</span>
+            <span>⏱ 15 min read</span>
+          </div>
+          <div class="featured-title">Why I Still Have a Blogroll in 2025</div>
+          <hr class="featured-divider" />
+          <p class="featured-excerpt">Everyone moved to Substack, Twitter became X, and the algorithm ate everything whole. I still have a handcrafted list of blogs I actually read, updated by hand, in HTML. This is my quiet act of resistance — and maybe yours too.</p>
+          <div class="featured-hashtags">
+            <span class="hashtag">#blogroll</span>
+            <span class="hashtag">#indie web</span>
+            <span class="hashtag">#resistance</span>
+            <span class="hashtag">#old internet</span>
+          </div>
+          <button class="featured-cta">Read the full piece →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-label">↓ filter by category</div>
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+        <button class="filter-btn" onclick="filterCards('tech', this)">Tech Rants</button>
+        <button class="filter-btn" onclick="filterCards('build', this)">Building Stuff</button>
+        <button class="filter-btn" onclick="filterCards('oldweb', this)">Old Web Forever</button>
+        <button class="filter-btn" onclick="filterCards('life', this)">Slice of Life</button>
+        <button class="filter-btn" onclick="filterCards('craft', this)">Craft</button>
+      </div>
+    </div>
+
+    <div class="cards-grid" id="cards-grid">
+
+      <div class="post-card" data-cat="tech">
+        <div class="sticky-note sticky-yellow"></div>
+        <div class="stamp stamp-red">READ</div>
+        <div class="card-img">
+          ⌨
+          <div class="cat-banner cat-tech">Tech Rants</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>May 14, 2025</span><span>⏱ 7 min</span></div>
+          <div class="card-title">The Terminal is the Message</div>
+          <div class="card-excerpt">McLuhan said the medium is the message. I think he would have loved the command line — raw, unmediated, zero dark patterns. The blinking cursor is the most honest UI ever designed.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#CLI</span>
+            <span class="hashtag">#McLuhan</span>
+            <span class="hashtag">#hacker culture</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="build">
+        <div class="sticky-note sticky-green"></div>
+        <div class="stamp stamp-blue">NEW</div>
+        <div class="card-img">
+          ⚙
+          <div class="cat-banner cat-build">Building Stuff</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Apr 29, 2025</span><span>⏱ 9 min</span></div>
+          <div class="card-title">NeuroCache: What a Cache Simulator Taught Me</div>
+          <div class="card-excerpt">Set-associative LRU eviction sounded dry until I spent three nights staring at miss ratios. Then it got personal. NumPy, Flask, and a lot of regret.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#cache</span>
+            <span class="hashtag">#systems</span>
+            <span class="hashtag">#Python</span>
+            <span class="hashtag">#Flask</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="oldweb">
+        <div class="sticky-note sticky-pink"></div>
+        <div class="stamp stamp-red">HOT</div>
+        <div class="card-img">
+          📡
+          <div class="cat-banner cat-oldweb">Old Web Forever</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Apr 11, 2025</span><span>⏱ 5 min</span></div>
+          <div class="card-title">Hot Take: RSS is Punk Rock</div>
+          <div class="card-excerpt">No algorithm. No engagement metrics. No ads. No follower counts. RSS is the last free zone on the internet and nobody under 30 is talking about it.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#RSS</span>
+            <span class="hashtag">#indie web</span>
+            <span class="hashtag">#algorithms</span>
+            <span class="hashtag">#punk</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="craft">
+        <div class="sticky-note sticky-blue"></div>
+        <div class="card-img">
+          ✏
+          <div class="cat-banner cat-craft">Craft</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Mar 28, 2025</span><span>⏱ 6 min</span></div>
+          <div class="card-title">Why I Write Before I Code</div>
+          <div class="card-excerpt">A rubber duck is a start. A blank page is better. Thinking through prose forces precision that pseudocode lets you dodge indefinitely.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#writing</span>
+            <span class="hashtag">#process</span>
+            <span class="hashtag">#thinking</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="tech">
+        <div class="sticky-note sticky-yellow"></div>
+        <div class="card-img">
+          🐍
+          <div class="cat-banner cat-tech">Tech Rants</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Mar 15, 2025</span><span>⏱ 8 min</span></div>
+          <div class="card-title">Flask is Still Good, Actually</div>
+          <div class="card-excerpt">In the era of full-stack frameworks and edge runtimes, there's something clarifying about a tool that does exactly one thing and gets out of the way.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#Flask</span>
+            <span class="hashtag">#Python</span>
+            <span class="hashtag">#backend</span>
+            <span class="hashtag">#microservices</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="life">
+        <div class="sticky-note sticky-pink"></div>
+        <div class="card-img">
+          ⏳
+          <div class="cat-banner cat-life">Slice of Life</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Feb 22, 2025</span><span>⏱ 4 min</span></div>
+          <div class="card-title">On Finishing Things</div>
+          <div class="card-excerpt">Most projects don't fail because of bad ideas. They fail somewhere between the second and third quarter of the work, when the excitement has worn off.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#motivation</span>
+            <span class="hashtag">#projects</span>
+            <span class="hashtag">#shipping</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="oldweb">
+        <div class="sticky-note sticky-green"></div>
+        <div class="card-img">
+          💾
+          <div class="cat-banner cat-oldweb">Old Web Forever</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Jan 30, 2025</span><span>⏱ 6 min</span></div>
+          <div class="card-title">Bring Back the Weird Personal Homepage</div>
+          <div class="card-excerpt">There was a time when every website had a guestbook, a "under construction" GIF, and a MIDI autoplay. It was chaotic. It was human. I miss it.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#geocities</span>
+            <span class="hashtag">#personal sites</span>
+            <span class="hashtag">#web history</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="build">
+        <div class="sticky-note sticky-blue"></div>
+        <div class="stamp stamp-blue">WIP</div>
+        <div class="card-img">
+          🔧
+          <div class="cat-banner cat-build">Building Stuff</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Jan 12, 2025</span><span>⏱ 11 min</span></div>
+          <div class="card-title">Git as a Time Machine (And How I Broke History)</div>
+          <div class="card-excerpt">A deep dive into reflog, interactive rebase, and the one time I force-pushed to main at 2am and had to explain myself to nobody, because it was a solo project.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#git</span>
+            <span class="hashtag">#version control</span>
+            <span class="hashtag">#mistakes</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+      <div class="post-card" data-cat="craft">
+        <div class="sticky-note sticky-yellow"></div>
+        <div class="card-img">
+          📚
+          <div class="cat-banner cat-craft">Craft</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta"><span>Dec 18, 2024</span><span>⏱ 7 min</span></div>
+          <div class="card-title">Books That Changed How I Build</div>
+          <div class="card-excerpt">Not programming books. The ones about systems, decisions, and the strange psychology of people who make things. The ones that rewired something.</div>
+          <div class="card-hashtags">
+            <span class="hashtag">#reading</span>
+            <span class="hashtag">#books</span>
+            <span class="hashtag">#systems thinking</span>
+          </div>
+          <button class="read-link">read it →</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-about">
+        <div class="footer-blog-name">ctrl+z on life</div>
+        <p class="footer-desc">A personal blog about tech, anime, internet culture, and other things I can't stop thinking about.</p>
+        <p class="footer-motto">no tracking. no ads. no algorithm. <span class="flag">🏴</span></p>
+      </div>
+
+      <div class="footer-archive">
+        <div class="footer-col-title">Archive</div>
+        <ul class="footer-list">
+          <li><a href="#">2025 (18 posts)</a></li>
+          <li><a href="#">2024 (31 posts)</a></li>
+          <li><a href="#">2023 (24 posts)</a></li>
+          <li><a href="#">2022 (17 posts)</a></li>
+          <li><a href="#">2021 (9 posts)</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-misc">
+        <div class="footer-col-title">Misc</div>
+        <ul class="footer-list">
+          <li><a href="#">RSS Feed</a></li>
+          <li><a href="#">Subscribe (email)</a></li>
+          <li><a href="#">Uses (my setup)</a></li>
+          <li><a href="#">Colophon</a></li>
+          <li><a href="#">Now page</a></li>
+          <li><a href="#">Source code</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2021–2025 Manan Gupta. All opinions are my own and wrong.</span>
+      <span class="footer-made">made with <span class="heart">♥</span> and too much caffeine</span>
+    </div>
+  </footer>
+
+  <script>
+    function filterCards(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.post-card').forEach(card => {
+        card.classList.toggle('hidden', cat !== 'all' && card.dataset.cat !== cat);
+      });
+    }
+  </script>
+</body>
+</html>
