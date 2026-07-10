@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I Don't Wanna See Them Em Dashes — manan.log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #EDE8DC;
+      --ink: #2a2420;
+      --muted: #7a7268;
+      --cream: #f5f0e8;
+      --yellow: #FFD700;
+      --red: #c0392b;
+      --blue-cat: #1a5da6;
+      --amber-cat: #b45309;
+      --footer-bg: #231c10;
+      --footer-text: #c8c0b0;
+      --footer-accent: #FFD700;
+    }
+
+    body {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background: var(--ink);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { font-family: 'Special Elite', serif; font-size: 20px; color: var(--bg); letter-spacing: 0.06em; text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-size: 12px; color: #b8b0a0; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+    .nav-links a:hover { color: var(--bg); }
+
+    .post-header {
+      background: var(--ink);
+      border-bottom: 3px solid var(--yellow);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    .post-back {
+      display: inline-block;
+      font-size: 12px;
+      color: #b8b0a0;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      border: 1px solid #4a4030;
+      padding: 0.4rem 0.9rem;
+      border-radius: 3px;
+    }
+    .post-back:hover { color: var(--yellow); border-color: var(--yellow); }
+    .post-category {
+      display: inline-block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--amber-cat);
+      color: var(--cream);
+      padding: 0.3rem 0.8rem;
+      border-radius: 3px;
+      margin-bottom: 1.2rem;
+    }
+    .post-title {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(24px, 4.2vw, 40px);
+      color: var(--yellow);
+      letter-spacing: 0.03em;
+      max-width: 720px;
+      margin: 0 auto 1rem;
+      line-height: 1.35;
+    }
+    .post-meta { font-size: 12px; color: #c8c0b0; display: flex; justify-content: center; gap: 1.2rem; }
+
+    main { flex: 1; }
+    .post-wrap { max-width: 680px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+    .post-excerpt {
+      font-size: 15px;
+      color: var(--muted);
+      font-style: italic;
+      border-left: 3px solid var(--yellow);
+      padding-left: 1rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+    .post-body p { font-size: 15.5px; line-height: 1.85; margin-bottom: 1.4rem; }
+    .post-body h2 { font-family: 'Special Elite', serif; font-size: 22px; margin: 2.2rem 0 1rem; letter-spacing: 0.02em; }
+    .post-body h3 { font-family: 'Special Elite', serif; font-size: 18px; margin: 1.8rem 0 0.8rem; }
+    .post-body blockquote {
+      border-left: 3px solid var(--red);
+      padding-left: 1.1rem;
+      margin: 1.6rem 0;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 15px;
+    }
+    .post-body a { color: var(--blue-cat); }
+    .post-body ul { margin: 0 0 1.4rem 1.4rem; line-height: 1.85; font-size: 15.5px; }
+
+    .post-hashtags { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .hashtag {
+      font-size: 11px;
+      background: var(--cream);
+      border: 1px solid #ddd4c0;
+      color: var(--muted);
+      padding: 0.3rem 0.7rem;
+      border-radius: 3px;
+    }
+    .post-divider { border: none; border-top: 1px dashed #c8beac; margin: 3rem 0 2rem; }
+    .post-nav-links { display: flex; justify-content: space-between; font-size: 13px; }
+    .post-nav-links a { color: var(--ink); text-decoration: none; border: 1px solid #c8beac; padding: 0.6rem 1rem; border-radius: 3px; }
+    .post-nav-links a:hover { border-color: var(--ink); }
+
+    .sources-list { font-size: 13px; margin: 0.5rem 0 0 1.2rem; line-height: 1.9; }
+    .sources-list a { color: var(--blue-cat); word-break: break-word; }
+
+    footer { background: var(--footer-bg); color: var(--footer-text); padding: 2.5rem 2rem 1.5rem; }
+    .footer-top {
+      max-width: 1100px; margin: 0 auto; display: grid;
+      grid-template-columns: 2fr 1fr 1fr; gap: 2rem;
+      padding-bottom: 1.5rem; border-bottom: 1px solid #3a3020;
+    }
+    .footer-blog-name { font-family: 'Special Elite', serif; color: var(--footer-accent); font-size: 16px; margin-bottom: 0.6rem; }
+    .footer-desc { font-size: 12px; line-height: 1.6; margin-bottom: 0.6rem; }
+    .footer-motto { font-size: 11px; color: #7a7060; }
+    .footer-col-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--footer-accent); margin-bottom: 0.7rem; }
+    .footer-list { list-style: none; font-size: 12px; line-height: 1.9; }
+    .footer-list a { color: var(--footer-text); text-decoration: none; }
+    .footer-list a:hover { color: var(--footer-accent); }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto; padding-top: 1.2rem;
+      display: flex; justify-content: space-between; font-size: 11px; color: #6a6050;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .footer-made .heart { color: var(--red); }
+
+    @media (max-width: 640px) {
+      .footer-top { grid-template-columns: 1fr; }
+      .post-meta { flex-direction: column; gap: 0.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-logo">manan.log</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#archive">archive</a></li>
+      <li><a href="../about.html">about</a></li>
+      <li><a href="../now.html">now</a></li>
+      <li><a href="../index.html">rss</a></li>
+    </ul>
+  </nav>
+
+  <div class="post-header">
+    <a href="../index.html" class="post-back">← back to all posts</a>
+    <div class="post-category">Craft</div>
+    <h1 class="post-title">I Don't Wanna See Them Em Dashes</h1>
+    <div class="post-meta">
+      <span>July 11, 2026</span>
+      <span>⏱ 4 min read</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="post-wrap">
+
+      <p class="post-excerpt">
+        Jane Austen got flagged for using AI. The evidence: too many em dashes. Here's why that's a real punctuation mystery, and why I'm not giving mine up.
+      </p>
+
+      <div class="post-body">
+
+        <p>I was recently scrolling on Instagram Reels (shocker, I know) when I saw one critiquing an author for using AI, due to excessive em dashes. The author in question? Jane Austen.</p>
+
+        <p>It was a satire reel, of course — but Jane Austen isn't the only one accused of using AI. (No, I do not want to hear arguments about her being long gone. It is what it is. Cancel <em>Pride and Prejudice</em> now, please.)</p>
+
+        <p>In my college society there's one line that's iconic, and something everyone on the content team is scared of, especially the newbies — courtesy of Tejasv sir. The line I think we should get printed on t-shirts is: "I don't wanna see them em dashes." It's generally accompanied by a little cursing from one person to another (if any future employer, or my mom, is reading this — I never curse).</p>
+
+        <p>The reel got me wondering: why have em dashes become a giveaway for AI writing rather than simply being a literary symbol? And why do I continue to use them despite the ongoing witch hunt?</p>
+
+        <h2>Why Do LLMs Love Em Dashes?</h2>
+
+        <p>To answer the first question: no one actually knows. Bye bye, end of blog.</p>
+
+        <p>But it's true — no one knows the actual reason behind why LLMs love em dashes. The most plausible explanation I've read is that it comes down to a change in training data, and how, for GPT-4o and onwards, the labs essentially thought "hey, this has potential — pass me the classics," which is something that aligns with Asian parents too.</p>
+
+        <p>GPT-3.5 was released in 2022 and did not have a particular inclination toward em dashes. GPT-4o was released in mid-2024 and had almost 10 times higher usage of em dashes. The pattern continued, and was seen in Anthropic and Gemini models too.</p>
+
+        <p>For GPT-3.5, the training data was mostly pirated book sites (read: Z-Library, LibGen) and whatever else could be scraped off the internet. When the labs realized the models had more potential, they trained them on classic literature — fed in via scanning to acquire higher-quality training data. Anthropic's court filings confirm they started this process in February 2024, so OpenAI likely did something similar.</p>
+
+        <p>The actual use of em dashes peaked in the 1800s. <em>Moby Dick</em> has 1,728 em dashes. (I have not counted the em dashes in <em>Pride and Prejudice</em>, folks.)</p>
+
+        <p>If the books the labs digitized skewed more toward the 1800s and 1900s, that would explain the higher em-dash usage. What it wouldn't explain is the lack of other Victorian literature quirks.</p>
+
+        <p>That, again, can be explained by RLHF (Reinforcement Learning with Human Feedback), which was carried out with the help of African workers — leading to models picking up African English mannerisms and common word usage (GPT-4o loves the word "delve"). A gentlemanly English sentence with three clauses to describe a vase will get flagged by a rater. A simple punctuation mark? It might just slip through. (When was the last time you stared at a full stop?)</p>
+
+        <h2>So Why Do I Still Use Them?</h2>
+
+        <p>Coming to the second question — I like being rebellious.</p>
+
+        <p>A more elaborate answer would be: why not? LLMs have learned from humans. Just because something is considered indicative of AI writing right now does not mean it is AI writing. (AI can't steal my charm yet. I hope.)</p>
+
+        <p>Literature has existed long before AI. It's art. I won't mend my art for a machine.</p>
+
+        <p>That's it. That's the answer.</p>
+
+        <h3>Further Reading</h3>
+        <p>My favourite pieces I came across during research:</p>
+        <ul class="sources-list">
+          <li><a href="https://www.linkedin.com/pulse/stop-nonsense-why-does-ai-love-em-dashes-so-much-raquel-oliveira-fdxce/" target="_blank" rel="noopener">Raquel Oliveira — "Stop the Nonsense: Why Does AI Love Em Dashes So Much"</a></li>
+          <li><a href="https://www.seangoedecke.com/em-dashes/" target="_blank" rel="noopener">Sean Goedecke — "Em Dashes"</a></li>
+        </ul>
+
+      </div>
+
+      <div class="post-hashtags">
+        <span class="hashtag">#em dashes</span>
+        <span class="hashtag">#AI writing</span>
+        <span class="hashtag">#literature</span>
+        <span class="hashtag">#jane austen</span>
+        <span class="hashtag">#rant</span>
+      </div>
+
+      <hr class="post-divider" />
+
+      <div class="post-nav-links">
+        <a href="../index.html">← all posts</a>
+        <a href="../about.html">about me →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-about">
+        <div class="footer-blog-name">manan.log</div>
+        <p class="footer-desc">Notes on machine learning, research, engineering, and everything in between.</p>
+        <p class="footer-motto">no tracking. no ads. no algorithm.</p>
+      </div>
+      <div class="footer-archive">
+        <div class="footer-col-title">Archive</div>
+        <ul class="footer-list"><li><a href="../index.html">All posts</a></li></ul>
+      </div>
+      <div class="footer-misc">
+        <div class="footer-col-title">Misc</div>
+        <ul class="footer-list">
+          <li><a href="../about.html">About</a></li>
+          <li><a href="https://github.com/">Source code</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Manan Gupta. All opinions are my own and wrong.</span>
+      <span class="footer-made">made with <span class="heart">♥</span> and too much caffeine</span>
+    </div>
+  </footer>
+
+</body>
+</html>

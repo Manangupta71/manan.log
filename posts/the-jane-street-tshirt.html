@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The T-Shirt, the Tree, and the Equation — manan.log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #EDE8DC;
+      --ink: #2a2420;
+      --muted: #7a7268;
+      --cream: #f5f0e8;
+      --yellow: #FFD700;
+      --red: #c0392b;
+      --blue-cat: #1a5da6;
+      --green-cat: #2d6a35;
+      --footer-bg: #231c10;
+      --footer-text: #c8c0b0;
+      --footer-accent: #FFD700;
+    }
+
+    body {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background: var(--ink);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { font-family: 'Special Elite', serif; font-size: 20px; color: var(--bg); letter-spacing: 0.06em; text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-size: 12px; color: #b8b0a0; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+    .nav-links a:hover { color: var(--bg); }
+
+    .post-header {
+      background: var(--ink);
+      border-bottom: 3px solid var(--yellow);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    .post-back {
+      display: inline-block;
+      font-size: 12px;
+      color: #b8b0a0;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      border: 1px solid #4a4030;
+      padding: 0.4rem 0.9rem;
+      border-radius: 3px;
+    }
+    .post-back:hover { color: var(--yellow); border-color: var(--yellow); }
+    .post-category {
+      display: inline-block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--green-cat);
+      color: var(--cream);
+      padding: 0.3rem 0.8rem;
+      border-radius: 3px;
+      margin-bottom: 1.2rem;
+    }
+    .post-title {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(24px, 4.2vw, 40px);
+      color: var(--yellow);
+      letter-spacing: 0.03em;
+      max-width: 720px;
+      margin: 0 auto 1rem;
+      line-height: 1.35;
+    }
+    .post-meta { font-size: 12px; color: #c8c0b0; display: flex; justify-content: center; gap: 1.2rem; }
+
+    main { flex: 1; }
+    .post-wrap { max-width: 680px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+    .post-excerpt {
+      font-size: 15px;
+      color: var(--muted);
+      font-style: italic;
+      border-left: 3px solid var(--yellow);
+      padding-left: 1rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+    .post-body p { font-size: 15.5px; line-height: 1.85; margin-bottom: 1.4rem; }
+    .post-body h2 { font-family: 'Special Elite', serif; font-size: 22px; margin: 2.2rem 0 1rem; letter-spacing: 0.02em; }
+    .post-body h3 { font-family: 'Special Elite', serif; font-size: 18px; margin: 1.8rem 0 0.8rem; }
+    .post-body ul { margin: 0 0 1.4rem 1.4rem; line-height: 1.85; font-size: 15.5px; }
+    .post-body a { color: var(--blue-cat); }
+
+    .equation-figure {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .equation-figure img {
+      max-width: 100%;
+      border: 1px solid #ddd4c0;
+      border-radius: 4px;
+      background: var(--cream);
+      padding: 1rem;
+    }
+    .equation-caption {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 0.6rem;
+      font-style: italic;
+    }
+    .equation-missing {
+      border: 2px dashed #c8beac;
+      border-radius: 4px;
+      padding: 2.5rem 1rem;
+      color: var(--muted);
+      font-size: 13px;
+      background: var(--cream);
+    }
+
+    .post-hashtags { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .hashtag {
+      font-size: 11px;
+      background: var(--cream);
+      border: 1px solid #ddd4c0;
+      color: var(--muted);
+      padding: 0.3rem 0.7rem;
+      border-radius: 3px;
+    }
+    .post-divider { border: none; border-top: 1px dashed #c8beac; margin: 3rem 0 2rem; }
+    .post-nav-links { display: flex; justify-content: space-between; font-size: 13px; }
+    .post-nav-links a { color: var(--ink); text-decoration: none; border: 1px solid #c8beac; padding: 0.6rem 1rem; border-radius: 3px; }
+    .post-nav-links a:hover { border-color: var(--ink); }
+
+    footer { background: var(--footer-bg); color: var(--footer-text); padding: 2.5rem 2rem 1.5rem; }
+    .footer-top {
+      max-width: 1100px; margin: 0 auto; display: grid;
+      grid-template-columns: 2fr 1fr 1fr; gap: 2rem;
+      padding-bottom: 1.5rem; border-bottom: 1px solid #3a3020;
+    }
+    .footer-blog-name { font-family: 'Special Elite', serif; color: var(--footer-accent); font-size: 16px; margin-bottom: 0.6rem; }
+    .footer-desc { font-size: 12px; line-height: 1.6; margin-bottom: 0.6rem; }
+    .footer-motto { font-size: 11px; color: #7a7060; }
+    .footer-col-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--footer-accent); margin-bottom: 0.7rem; }
+    .footer-list { list-style: none; font-size: 12px; line-height: 1.9; }
+    .footer-list a { color: var(--footer-text); text-decoration: none; }
+    .footer-list a:hover { color: var(--footer-accent); }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto; padding-top: 1.2rem;
+      display: flex; justify-content: space-between; font-size: 11px; color: #6a6050;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .footer-made .heart { color: var(--red); }
+
+    @media (max-width: 640px) {
+      .footer-top { grid-template-columns: 1fr; }
+      .post-meta { flex-direction: column; gap: 0.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-logo">manan.log</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#archive">archive</a></li>
+      <li><a href="../about.html">about</a></li>
+      <li><a href="../now.html">now</a></li>
+      <li><a href="../index.html">rss</a></li>
+    </ul>
+  </nav>
+
+  <div class="post-header">
+    <a href="../index.html" class="post-back">← back to all posts</a>
+    <div class="post-category">Slice of Life</div>
+    <h1 class="post-title">The gift, the Tree, and the Equation</h1>
+    <div class="post-meta">
+      <span>July 11, 2026</span>
+      <span>⏱ 6 min read</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="post-wrap">
+
+      <p class="post-excerpt">
+        If any of my friends are reading this, I am still open to more Mathematical gifts.
+
+      <div class="post-body">
+
+        <p>No the gift is NOT a maths textbook. I honestly don't know what I'd do if someone gifted me one. The answer ranges from using it as a paperweight to scrambling in a spiral trying to understand what a symbol means at 3am — I don't even know which one's worse honestly: being too nonchalant or being too passionate. I bet on the first one though.</p>
+
+        <p>Anyways, the gift in question was from a friend at IIT Bombay who was part of the Quant club (shoutout to you Divyansh, you a G). The silly rodeo of agreeing to carry the extra t-shirts back to college for redistribution to a mutual friend might have cost me ₹2100 on my Indigo flight for "extra luggage." That's right folks, the gift was a t-shirt.</p>
+
+        <p>Not just any t-shirt though — it was a piece of Jane Street merchandise. I know a few people who'll sacrifice their not-so-loved ones for that (totally not me).</p>
+
+        <p>When I was in my first year, at the end of it, I found out that one of my seniors was interning at Graviton (please look it up, I am not doing free promo for apparently anyone other than Jane Street). All I honestly knew then was that: it paid well, it had something to do with ML, and — money. We had discussions about it, and I know slightly more about quant now than I did then, but honestly, I still have no clue if I want in or not. Mind you, these are very similar to the thoughts I had during my JEE prep — maybe I'll write about that too.</p>
+
+        <h2>Getting Back to the Equation</h2>
+
+        <p>Since I now have a blog, I don't have to smoosh topics together — we can do an article on my situationship with quant later. Getting back to the equation, here's the t-shirt logo, nested in what's called a Pythagoras Tree Fractal:</p>
+
+        <div class="equation-figure">
+  <img src="../images/jane-street-tee.jpeg" alt="Jane Street logo nested in a Pythagoras Tree Fractal with the pricing equation">
+  <p class="equation-caption">The all knowing Tshirt</p>
+</div>
+       
+
+        <p>How does this connect to quant, you may ask? Buckle up for a lesson, folks. In quantitative finance, trees are used to model probability, uncertainty, and time. Here's a simpler, real-world way to think about it.</p>
+
+        <h3>1. The Stock Market "Choose Your Own Adventure" (Binomial Pricing)</h3>
+
+        <p>Imagine you're looking at a stock today, and you want to guess where it'll be in a week. Instead of guessing randomly, you build a game tree: tomorrow, the stock can only go Up or Down. The day after, from the "Up" spot it can go Up-Up or Up-Down, and from "Down" it can go Down-Up or Down-Down.</p>
+
+        <p>Keep drawing these branches for every day and you get a massive branching grid that looks exactly like the Pythagoras Tree. Wall Street traders use this exact "lattice" map to calculate all the possible future paths a stock could take — and from that, figure out a fair price to charge for financial contracts like options today.</p>
+
+        <h3>2. The Algorithmic Voting Booth (Decision Trees & Random Forests)</h3>
+
+        <p>When quant firms use machine learning to predict markets, they don't just guess — they use data to make a chain of binary "yes or no" decisions. A Decision Tree is like playing 20 Questions with data: is market volume high? If yes — did the stock drop yesterday? If yes — buy.</p>
+
+        <p>A Random Forest is what happens when you grow a whole bunch of these different decision trees at once. Each tree looks at a slightly different slice of market data and makes its own branching prediction. In the end, all the trees vote on the best move — if 70% vote "buy," the algorithm executes the trade.</p>
+
+        <p>(I'm done now, but we have an equation to cover — also notice how I didn't mention terms like "alpha" or "Cox-Ross-Rubinstein binomial trees." I don't want you guys feeling dumber. Unlike what you may think, I am nice like that.)</p>
+
+        <h2>The Equation, In Plain English</h2>
+
+        <p>Imagine you're playing a video game where you start at the trunk of a massive tree.</p>
+
+        <p><strong>The rules:</strong> you walk outward along the branches. Every time a branch forks, you choose left or right, step after step, until you reach the outer tips of the tree. Every fork has a treasure chest sitting on it, and every chest holds a random reward. Once you reach the end of your walk, your final score is the average value of every reward you collected along that path.</p>
+
+        <p>The question is: what happens to your score under two different reward rules as the tree grows infinitely large?</p>
+
+        <h3>Scenario A: Chests are either empty or hold exactly one dollar</h3>
+
+        <p>Every chest is a coin flip — it either contains a dollar bill or nothing. Because the branches split in two at every step, the total number of unique paths multiplies incredibly fast — billions of routes, deep enough into the tree. Even though any random path gives you a disappointing mix of empty chests and dollar bills, the sheer volume of choices changes the game. Because there are so many total paths to pick from, you're practically guaranteed to find at least one perfect path where every chest along the way holds a dollar.</p>
+
+        <p><strong>The answer:</strong> since you can scan the whole tree and pick that perfect route, your maximum average score will always end up being exactly one dollar.</p>
+
+        <h3>Scenario B: Chests hold any random amount between zero and one dollar</h3>
+
+        <p>Now the rewards are fluid — a chest could hold twenty-three cents, eighty-eight cents, a single nickel. Blindfolded and picking a path at random, your average score would land around fifty cents. But you have an advantage: you can map out the entire tree before you start walking. You can avoid branches littered with pennies and steer toward the ones loaded with higher payouts.</p>
+
+        <p><strong>The answer:</strong> because you're always picking the best options and dodging the bad ones, your final average score pulls way ahead of the fifty-cent baseline, leveling out at a specific value around eighty-four cents.</p>
+
+        <p>The algorithm uses optimization mathematics to instantly map out the entire network, dodge high-friction options, and secure the single most profitable path available — just like finding the highest-paying route through the branches of a random tree.</p>
+
+        <p>(I did not want to type out symbols, hence the plain English, folks.)</p>
+
+        <p>Anyways, that's it — enough maths for today. This was like being gifted a maths textbook. I see the sun coming up. If any of you is inspired to make a hedge fund out of this, give me a call. Read: a job.</p>
+
+      </div>
+
+      <div class="post-hashtags">
+        <span class="hashtag">#quant</span>
+        <span class="hashtag">#jane street</span>
+        <span class="hashtag">#probability</span>
+        <span class="hashtag">#decision trees</span>
+        <span class="hashtag">#3am thoughts</span>
+      </div>
+
+      <hr class="post-divider" />
+
+      <div class="post-nav-links">
+        <a href="../index.html">← all posts</a>
+        <a href="../about.html">about me →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-about">
+        <div class="footer-blog-name">manan.log</div>
+        <p class="footer-desc">Notes on machine learning, research, engineering, and everything in between.</p>
+        <p class="footer-motto">no tracking. no ads. no algorithm.</p>
+      </div>
+      <div class="footer-archive">
+        <div class="footer-col-title">Archive</div>
+        <ul class="footer-list"><li><a href="../index.html">All posts</a></li></ul>
+      </div>
+      <div class="footer-misc">
+        <div class="footer-col-title">Misc</div>
+        <ul class="footer-list">
+          <li><a href="../about.html">About</a></li>
+          <li><a href="https://github.com/">Source code</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Manan Gupta. All opinions are my own and wrong.</span>
+      <span class="footer-made">made with <span class="heart">♥</span> and too much caffeine</span>
+    </div>
+  </footer>
+
+</body>
+</html>
