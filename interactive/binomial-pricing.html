@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binomial Option Pricing Simulator</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 760px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #1a1a1a;
+    background: #fdfdfb;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  p.subtitle { color: #666; font-size: 14px; margin-top: 0; margin-bottom: 28px; }
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 28px;
+    margin-bottom: 24px;
+  }
+  .control label { font-size: 13px; color: #555; display: block; margin-bottom: 4px; }
+  .control-row { display: flex; align-items: center; gap: 10px; }
+  input[type="range"] { flex: 1; }
+  .control-row span { font-size: 13px; font-weight: 600; min-width: 44px; text-align: right; }
+  select {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: #f2f2ef;
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .stat-card.price {
+    background: #e1f5ee;
+  }
+  .stat-card p:first-child { font-size: 12px; color: #666; margin: 0 0 4px; }
+  .stat-card.price p:first-child { color: #0f6e56; }
+  .stat-card p:last-child { font-size: 20px; font-weight: 600; margin: 0; }
+  .stat-card.price p:last-child { color: #085041; }
+  #tree-wrap { width: 100%; overflow-x: auto; border: 1px solid #eee; border-radius: 8px; }
+  footer { margin-top: 32px; font-size: 12px; color: #999; }
+</style>
+</head>
+<body>
+
+<h1>Binomial option pricing simulator</h1>
+<p class="subtitle">The stock market "choose your own adventure" tree — up or down at every step, priced back via risk-neutral valuation.</p>
+
+<div class="controls">
+  <div class="control">
+    <label for="s0">Stock price today (S0)</label>
+    <div class="control-row">
+      <input type="range" min="50" max="150" value="100" step="1" id="s0">
+      <span id="s0-out">100</span>
+    </div>
+  </div>
+  <div class="control">
+    <label for="k">Strike price (K)</label>
+    <div class="control-row">
+      <input type="range" min="50" max="150" value="100" step="1" id="k">
+      <span id="k-out">100</span>
+    </div>
+  </div>
+  <div class="control">
+    <label for="vol">Volatility (annual)</label>
+    <div class="control-row">
+      <input type="range" min="5" max="80" value="25" step="1" id="vol">
+      <span id="vol-out">25%</span>
+    </div>
+  </div>
+  <div class="control">
+    <label for="rate">Risk-free rate (annual)</label>
+    <div class="control-row">
+      <input type="range" min="0" max="10" value="5" step="0.5" id="rate">
+      <span id="rate-out">5%</span>
+    </div>
+  </div>
+  <div class="control">
+    <label for="steps">Steps in the tree</label>
+    <div class="control-row">
+      <input type="range" min="2" max="5" value="4" step="1" id="steps">
+      <span id="steps-out">4</span>
+    </div>
+  </div>
+  <div class="control">
+    <label for="opttype">Option type</label>
+    <select id="opttype">
+      <option value="call">Call</option>
+      <option value="put">Put</option>
+    </select>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-card">
+    <p>Up factor (u)</p>
+    <p id="u-val">--</p>
+  </div>
+  <div class="stat-card">
+    <p>Risk-neutral p (up)</p>
+    <p id="p-val">--</p>
+  </div>
+  <div class="stat-card price">
+    <p>Option price</p>
+    <p id="price-val">--</p>
+  </div>
+</div>
+
+<div id="tree-wrap">
+  <svg id="tree-svg" width="100%" height="360" viewBox="0 0 680 360"></svg>
+</div>
+
+<footer>
+  Built to accompany <em>The Gift, the Tree, and the Equation</em> — manan.log.
+  Risk-neutral pricing via Cox-Ross-Rubinstein binomial tree.
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const svgNS = "http://www.w3.org/2000/svg";
+
+function fmt(n) { return '$' + n.toFixed(2); }
+
+function render() {
+  const S0 = +$('s0').value;
+  const K = +$('k').value;
+  const vol = +$('vol').value / 100;
+  const r = +$('rate').value / 100;
+  const n = +$('steps').value;
+  const isCall = $('opttype').value === 'call';
+  const T = 1;
+  const dt = T / n;
+
+  const u = Math.exp(vol * Math.sqrt(dt));
+  const d = 1 / u;
+  const p = (Math.exp(r * dt) - d) / (u - d);
+
+  $('s0-out').textContent = S0;
+  $('k-out').textContent = K;
+  $('vol-out').textContent = (vol * 100).toFixed(0) + '%';
+  $('rate-out').textContent = (r * 100).toFixed(1) + '%';
+  $('steps-out').textContent = n;
+  $('u-val').textContent = u.toFixed(3);
+  $('p-val').textContent = p.toFixed(3);
+
+  // Build stock price tree: stockTree[i][j] = price after i steps, j down-moves
+  const stockTree = [];
+  for (let i = 0; i <= n; i++) {
+    const level = [];
+    for (let j = 0; j <= i; j++) {
+      level.push(S0 * Math.pow(u, i - j) * Math.pow(d, j));
+    }
+    stockTree.push(level);
+  }
+
+  // Terminal payoffs
+  let values = stockTree[n].map(s => isCall ? Math.max(s - K, 0) : Math.max(K - s, 0));
+  const valueTree = [values.slice()];
+
+  // Backward induction
+  for (let i = n - 1; i >= 0; i--) {
+    const next = [];
+    for (let j = 0; j <= i; j++) {
+      const val = Math.exp(-r * dt) * (p * values[j] + (1 - p) * values[j + 1]);
+      next.push(val);
+    }
+    values = next;
+    valueTree.unshift(values.slice());
+  }
+
+  $('price-val').textContent = fmt(valueTree[0][0]);
+
+  // Draw tree
+  const svg = $('tree-svg');
+  svg.innerHTML = '';
+  const W = 680, H = 360;
+  const xStep = (W - 60) / n;
+  const yStep = (H - 60) / (n === 0 ? 1 : n);
+
+  function nodePos(i, j) {
+    const x = 40 + i * xStep;
+    const y = (H / 2) + (j - i / 2) * (yStep * 0.85);
+    return [x, y];
+  }
+
+  const lineColor = '#c3c2b7';
+  const nodeFill = '#e1f5ee';
+  const nodeStroke = '#0f6e56';
+  const nodeText = '#04342c';
+  const subText = '#0f6e56';
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j <= i; j++) {
+      const [x1, y1] = nodePos(i, j);
+      const [x2u, y2u] = nodePos(i + 1, j);
+      const [x2d, y2d] = nodePos(i + 1, j + 1);
+      [[x2u, y2u], [x2d, y2d]].forEach(([x2, y2]) => {
+        const line = document.createElementNS(svgNS, 'line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+        line.setAttribute('stroke', lineColor);
+        line.setAttribute('stroke-width', '1.5');
+        svg.appendChild(line);
+      });
+    }
+  }
+
+  for (let i = 0; i <= n; i++) {
+    for (let j = 0; j <= i; j++) {
+      const [x, y] = nodePos(i, j);
+      const circle = document.createElementNS(svgNS, 'circle');
+      circle.setAttribute('cx', x); circle.setAttribute('cy', y);
+      circle.setAttribute('r', 26);
+      circle.setAttribute('fill', nodeFill);
+      circle.setAttribute('stroke', nodeStroke);
+      circle.setAttribute('stroke-width', '1');
+      svg.appendChild(circle);
+
+      const t1 = document.createElementNS(svgNS, 'text');
+      t1.setAttribute('x', x); t1.setAttribute('y', y - 3);
+      t1.setAttribute('text-anchor', 'middle');
+      t1.setAttribute('font-size', '10');
+      t1.setAttribute('font-weight', '600');
+      t1.setAttribute('fill', nodeText);
+      t1.textContent = '$' + stockTree[i][j].toFixed(0);
+      svg.appendChild(t1);
+
+      const t2 = document.createElementNS(svgNS, 'text');
+      t2.setAttribute('x', x); t2.setAttribute('y', y + 10);
+      t2.setAttribute('text-anchor', 'middle');
+      t2.setAttribute('font-size', '9');
+      t2.setAttribute('fill', subText);
+      t2.textContent = '$' + valueTree[i][j].toFixed(1);
+      svg.appendChild(t2);
+    }
+  }
+}
+
+['s0','k','vol','rate','steps'].forEach(id => $(id).addEventListener('input', render));
+$('opttype').addEventListener('change', render);
+render();
+</script>
+
+</body>
+</html>

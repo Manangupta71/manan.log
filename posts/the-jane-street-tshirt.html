@@ -131,6 +131,19 @@
       font-size: 13px;
       background: var(--cream);
     }
+    .interactive-demo{
+    margin:2.5rem 0;
+    border:1px solid #ddd4c0;
+    border-radius:8px;
+    overflow:hidden;
+    background:#fdfdfb;
+}
+
+.interactive-demo iframe{
+    width:100%;
+    height:720px;
+    border:none;
+}
 
     .post-hashtags { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .hashtag {
@@ -261,6 +274,21 @@
         <p>Anyways, that's it — enough maths for today. This was like being gifted a maths textbook. I see the sun coming up. If any of you is inspired to make a hedge fund out of this, give me a call. Read: a job.</p>
 
       </div>
+<h3>Try it yourself</h3>
+
+<p>
+Instead of staring at a static tree, play with one. Change the stock price,
+volatility, strike price, or number of steps and watch how the option value
+changes as the tree is priced backwards.
+</p>
+
+<div class="interactive-demo">
+    <iframe
+        src="../interactive/binomial-pricing.html"
+        title="Binomial Option Pricing Simulator"
+        loading="lazy">
+    </iframe>
+</div>
 
       <div class="post-hashtags">
         <span class="hashtag">#quant</span>
